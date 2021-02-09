@@ -22,12 +22,29 @@ mutable struct MLFLogger <: AbstractLogger
 end
 
 function MLFLogger(; min_level=Info, step_increment=1, start_step=0, experiment_name=nothing, kwargs...)
-    client = mlflow.tracking.MlflowClient()
+    client = mlflow.tracking.MlflowClient(get(ENV, "MLFLOW_TRACKING_URI", nothing))
+
+    expid = nothing
+    if haskey(ENV, "MLFLOW_EXPERIMENT_ID")
+        expid = ENV["MLFLOW_EXPERIMENT_ID"]
+        exp = client.get_experiment(expid)
+        experiment_name = exp.name
+    end
+    
     if isnothing(experiment_name)
         experiment_name = string(UUIDs.uuid4())
     end
-    expid = client.create_experiment(experiment_name)
-    run = client.create_run(expid)
+    if isnothing(expid)
+        expid = client.create_experiment(experiment_name)
+    end
+
+    if haskey(ENV, "MLFLOW_RUN_ID")
+        runid = ENV["MLFLOW_RUN_ID"]
+        run = client.get_run(runid)
+    else
+        run = client.create_run(expid)    
+    end
+    
     MLFLogger(client, run, step_increment, start_step, min_level)
 end
 
