@@ -36,6 +36,12 @@ increment_step!(lg::MLFLogger, Δ_Step) = lg.global_step += Δ_Step
 add_tag!(lg::MLFLogger, tag::String) = lg.client.set_experiment_tag(lg.run.info.experiment_tag, "", tag)
 add_tag!(lg::MLFLogger, key::String, value::String) = lg.client.set_experiment_tag(lg.run.info.experiment_tag, key, value)
 
+
+"""
+    function log_metric(lg::CLogger, name::AbstractString, value::Real; step::Int=nothing, epoch::Int=nothing)
+        
+Logs general scalar metrics.        
+"""
 function log_metric(lg::MLFLogger, key::AbstractString, value; timestamp=nothing, step=nothing)
     lg.client.log_metric(lg.run.info.run_id, key, value, timestamp=timestamp, step=step)
 end
