@@ -50,8 +50,8 @@ end
 
 increment_step!(lg::MLFLogger, Δ_Step) = lg.global_step += Δ_Step
 
-add_tag!(lg::MLFLogger, tag::String) = lg.client.set_experiment_tag(lg.run.info.experiment_tag, "", tag)
-add_tag!(lg::MLFLogger, key::String, value::String) = lg.client.set_experiment_tag(lg.run.info.experiment_tag, key, value)
+add_tag!(lg::MLFLogger, tag::String) = lg.client.set_experiment_tag(lg.run.info.experiment_id, "", tag)
+add_tag!(lg::MLFLogger, key::String, value::String) = lg.client.set_experiment_tag(lg.run.info.experiment_id, key, value)
 
 
 """
@@ -66,6 +66,8 @@ end
 function log_param(lg::MLFLogger, key::AbstractString, value)
     lg.client.log_param(lg.run.info.run_id, key, value)
 end
+
+const log_parameter = log_param
 
 CoreLogging.catch_exceptions(lg::MLFLogger) = false
 
