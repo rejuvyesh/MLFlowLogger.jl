@@ -21,8 +21,12 @@ mutable struct MLFLogger <: AbstractLogger
     min_level::LogLevel
 end
 
-function MLFLogger(; min_level=Info, step_increment=1, start_step=0, experiment_name=nothing, kwargs...)
-    client = mlflow.tracking.MlflowClient()
+function MLFLogger(; min_level=Info, step_increment=1, start_step=0, experiment_name=nothing, tracking_uri=nothing, kwargs...)
+    if isnothing(tracking_uri)
+        client = mlflow.tracking.MlflowClient()
+    else
+        client = mlflow.tracking.MlflowClient(tracking_uri)
+    end
 
     expid = nothing
     if haskey(ENV, "MLFLOW_EXPERIMENT_ID")
