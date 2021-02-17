@@ -1,7 +1,7 @@
 name = "MLFlowLogger"
 uuid = "a17d1b34-d2df-4d9e-9e11-6289e57bd259"
 authors = ["rejuvyesh <mail@rejuvyesh.com> and contributors"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
