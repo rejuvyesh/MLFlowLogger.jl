@@ -2,6 +2,9 @@ module MLFlowLogger
 
 using PyCall
 using UUIDs
+using Requires
+using FileIO
+using ColorTypes
 
 export MLFLogger
 
@@ -9,6 +12,12 @@ const mlflow = PyNULL()
 
 function __init__()
     copy!(mlflow, pyimport("mlflow"))
+    @require ImageIO="82e4d734-157c-48bb-816b-45c225c6df19" begin    
+        include("image.jl")
+        @require Plots="91a5bcdd-55d7-5caf-9e0b-520d859cae80" begin
+            include("plots.jl")
+        end    
+    end
 end
 
 using Base.CoreLogging: CoreLogging, AbstractLogger, LogLevel, Info, handle_message, shouldlog, min_enabled_level, catch_exceptions
@@ -71,6 +80,35 @@ function log_param(lg::MLFLogger, key::AbstractString, value)
     lg.client.log_param(lg.run.info.run_id, key, value)
 end
 
+"""
+    function log_artifact(lg::MLFLogger, local_path, artifact_path)
+
+Log a local file or directory as an artifact of the currently active run.
+
+- `local_path`: Path to the file to write
+- `artifact_path`: If provided, the directory to write to.
+"""
+function log_artifact(lg::MLFLogger, local_path, artifact_path=nothing)
+    lg.client.log_artifact(lg.run.info.run_id, local_path, artifact_path)
+end
+
+"""
+    function log_image(lg::MLFLogger, key::AbstractString, obj::AbstractString; step=nothing)
+
+Log a local image file as an artifact of the currently active run. If current `step` provided, adds
+it to the artifact directory path.
+"""
+function log_image(lg::MLFLogger, key::AbstractString, obj::AbstractString; step=nothing)
+    if !ispath(obj)
+        @warn "$obj not a path to an image"
+        return        
+    end
+    if !isnothing(step)
+        key = key * "/$step"
+    end
+    log_artifact(lg, obj, key)
+end
+
 const log_parameter = log_param
 
 CoreLogging.catch_exceptions(lg::MLFLogger) = false
@@ -116,6 +154,7 @@ end
 # Split complex numbers into real/complex pairs
 preprocess(name, val::Complex, data) = push!(data, name*"/re"=>real(val), name*"/im"=>imag(val))
 
+# Handle standard float metrics
 process(lg::MLFLogger, name::AbstractString, obj::Real, step::Int) = log_metric(lg, name, obj; step=step)
 
 function CoreLogging.handle_message(lg::MLFLogger, level, message, _module, group, id, file, line; kwargs...)
