@@ -106,6 +106,7 @@ function log_image(lg::MLFLogger, key::AbstractString, obj::AbstractString; step
     if !isnothing(step)
         key = key * "/$step"
     end
+    key = key * "/" basename(obj)
     log_artifact(lg, obj, key)
 end
 
