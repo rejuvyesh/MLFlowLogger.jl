@@ -170,7 +170,7 @@ function CoreLogging.handle_message(lg::MLFLogger, level, message, _module, grou
                 i_step = val
                 continue
             end
-            preprocess(message*"/$key", val, data)
+            preprocess(strip(message*"/$key", ['(', ')', '{', '}', '!']), val, data)
         end
         iter = increment_step!(lg, i_step)
         for (name, val) in data
