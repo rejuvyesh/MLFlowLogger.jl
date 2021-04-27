@@ -31,7 +31,7 @@ If you want to increase the counter by a different amount, or prevent it from in
 
 See the example below:
 ```julia
-using TensorBoardLogger, Logging, Random
+using MLFlowLogger, Logging, Random
 
 lg = MLFLogger(min_level=Logging.Info)
 
