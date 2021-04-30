@@ -63,8 +63,8 @@ end
 
 increment_step!(lg::MLFLogger, Δ_Step) = lg.global_step += Δ_Step
 
-add_tag!(lg::MLFLogger, tag::String) = lg.client.set_experiment_tag(lg.run.info.experiment_id, "tag", tag)
-add_tag!(lg::MLFLogger, key::String, value::String) = lg.client.set_experiment_tag(lg.run.info.experiment_id, key, value)
+add_tag!(lg::MLFLogger, tag::String) = lg.client.set_tag(lg.run.info.run_id, "tag", tag)
+add_tag!(lg::MLFLogger, key::String, value::String) = lg.client.set_tag(lg.run.info.run_id, key, value)
 
 
 """
