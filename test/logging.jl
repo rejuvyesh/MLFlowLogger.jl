@@ -1,3 +1,17 @@
+@testset "Increment Step" begin
+    mlflogger = MLFLogger(
+        tracking_uri=ENV["MLFLOW_URI"],
+        start_step=0,
+        step_increment=1
+        )
+    @test mlflogger.global_step == 0
+
+    MLFlowLogger.increment_step!(mlflogger, mlflogger.step_increment)
+    @test mlflogger.global_step == 1
+
+    cleanup_experiment(mlflogger)
+end
+
 @testset "Log Metric" begin
     mlflogger = MLFLogger(tracking_uri=ENV["MLFLOW_URI"])
     key = "very specific key"

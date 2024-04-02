@@ -8,12 +8,16 @@ export MLFLogger
 mutable struct MLFLogger
     mlf::MLFlow
     run::MLFlowRun
+    global_step::Int
+    step_increment::Int
 end
 
 function MLFLogger(;
     tracking_uri=nothing, 
     experiment_name=nothing,
     run_id=nothing,
+    start_step=0,
+    step_increment=1,
     kwargs...)
 
     if isnothing(tracking_uri)
@@ -28,13 +32,15 @@ function MLFLogger(;
     experiment = getorcreateexperiment(mlf, experiment_name, kwargs...)
 
     if isnothing(run_id)
-        run = createrun(mlf, experiment.experiment_id, kwargs...)    
+        run = createrun(mlf, experiment.experiment_id, kwargs...)
     else
         run = getrun(mlf, run_id, kwargs...)
     end
 
-    MLFLogger(mlf, run)
+    MLFLogger(mlf, run, start_step, step_increment)
 end
+
+increment_step!(logger::MLFLogger, Δ_Step) = logger.global_step += Δ_Step
 
 """
     function log_metric(logger::MLFLogger, key::AbstractString, value::Real; timestamp=missing, step=missing)
