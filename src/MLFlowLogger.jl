@@ -69,6 +69,19 @@ function log_artifact(logger::MLFLogger, filepath)
     logartifact(logger.mlf, logger.run, filepath)
 end
 
+"""
+    function log_image(logger::MLFLogger, obj::AbstractString)
+
+Log a local image file as an artifact of the currently active run.
+"""
+function log_image(logger::MLFLogger, obj::AbstractString)
+    if !ispath(obj)
+        @warn "$obj not a path to an image"
+        return
+    end
+    log_artifact(logger, obj)
+end
+
 CoreLogging.catch_exceptions(logger::MLFLogger) = false
 
 CoreLogging.min_enabled_level(logger::MLFLogger) = logger.min_level

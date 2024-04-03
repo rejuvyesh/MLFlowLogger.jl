@@ -1,4 +1,5 @@
 using Base.CoreLogging
+using FileIO
 
 @testset "Increment Step" begin
     mlflogger = MLFLogger(
@@ -52,6 +53,19 @@ end
     @test isfile(artifact)
 
     cleanup_experiment(mlflogger)
+    rm(filepath)
+end
+
+@testset "Log Image" begin
+    mlflogger = MLFLogger(tracking_uri=ENV["MLFLOW_URI"])
+    arr = rand(4,3)
+    filepath = "image.png"
+    save(filepath, arr)
+
+    artifact = MLFlowLogger.log_image(mlflogger, filepath)
+    @test isfile(artifact)
+
+    #cleanup_experiment(mlflogger)
     rm(filepath)
 end
 
