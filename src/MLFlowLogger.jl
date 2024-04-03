@@ -58,6 +58,17 @@ function log_param(logger::MLFLogger, key::AbstractString, value)
     logparam(logger.mlf, logger.run, key, value)
 end
 
+"""
+    function log_artifact(logger::MLFLogger, filepath)
+
+Log a local file as an artifact of the currently active run.
+
+- `filepath`: Path to the file
+"""
+function log_artifact(logger::MLFLogger, filepath)
+    logartifact(logger.mlf, logger.run, filepath)
+end
+
 CoreLogging.catch_exceptions(logger::MLFLogger) = false
 
 CoreLogging.min_enabled_level(logger::MLFLogger) = logger.min_level

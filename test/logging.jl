@@ -43,6 +43,18 @@ end
     cleanup_experiment(mlflogger)
 end
 
+@testset "Log Artifact" begin
+    mlflogger = MLFLogger(tracking_uri=ENV["MLFLOW_URI"])
+    filepath = "artifact.txt"
+    write(filepath, "hi I am an artifact file")
+
+    artifact = MLFlowLogger.log_artifact(mlflogger, filepath)
+    @test isfile(artifact)
+
+    cleanup_experiment(mlflogger)
+    rm(filepath)
+end
+
 @testset "Core Logging" begin
     mlflogger = MLFLogger(
         tracking_uri=ENV["MLFLOW_URI"],
