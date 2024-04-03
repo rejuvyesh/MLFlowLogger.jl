@@ -29,6 +29,20 @@ end
     cleanup_experiment(mlflogger)
 end
 
+@testset "Log Parameter" begin
+    mlflogger = MLFLogger(tracking_uri=ENV["MLFLOW_URI"])
+    key = "very specific parameter key"
+    value = "parameter value"  # is a String in MLFlowClient.MLFlowRunDataParam
+    MLFlowLogger.log_param(mlflogger, key, value)
+
+    experiment_id = mlflogger.run.info.experiment_id
+    retrieved_runs = searchruns(mlflogger.mlf, experiment_id)
+
+    @test retrieved_runs[1].data.params[key].value == value
+
+    cleanup_experiment(mlflogger)
+end
+
 @testset "Core Logging" begin
     mlflogger = MLFLogger(
         tracking_uri=ENV["MLFLOW_URI"],

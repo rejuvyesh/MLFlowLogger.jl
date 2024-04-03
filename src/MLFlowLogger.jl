@@ -54,6 +54,10 @@ function log_metric(logger::MLFLogger, key::AbstractString, value::Real; timesta
     logmetric(logger.mlf, logger.run, key, value, timestamp=timestamp, step=step)
 end
 
+function log_param(logger::MLFLogger, key::AbstractString, value)
+    logparam(logger.mlf, logger.run, key, value)
+end
+
 CoreLogging.catch_exceptions(logger::MLFLogger) = false
 
 CoreLogging.min_enabled_level(logger::MLFLogger) = logger.min_level
