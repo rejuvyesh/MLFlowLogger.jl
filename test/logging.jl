@@ -1,5 +1,6 @@
 using Base.CoreLogging
 using FileIO
+using ImageIO
 
 @testset "Increment Step" begin
     mlflogger = MLFLogger(
@@ -65,7 +66,7 @@ end
     artifact = MLFlowLogger.log_image(mlflogger, filepath)
     @test isfile(artifact)
 
-    #cleanup_experiment(mlflogger)
+    cleanup_experiment(mlflogger)
     rm(filepath)
 end
 

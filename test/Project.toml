@@ -1,6 +1,0 @@
-[deps]
-FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
-ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
-MLFlowClient = "64a0f543-368b-4a9a-827a-e71edb2a0b83"
-PNGFiles = "f57f5aa1-a3ce-4bc8-8ab9-96f992907883"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
