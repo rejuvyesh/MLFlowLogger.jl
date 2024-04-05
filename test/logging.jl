@@ -40,7 +40,12 @@ end
     experiment_id = mlflogger.run.info.experiment_id
     retrieved_runs = searchruns(mlflogger.mlf, experiment_id)
 
-    @test retrieved_runs[1].data.params[key].value == value
+    # MLFlowRunDataParam was introduced in MLFlowClient 0.4.4
+    if pkgversion(MLFlowClient) >= v"0.4.4"
+        @test retrieved_runs[1].data.params[key].value == value
+    else
+        @test retrieved_runs[1].data.params[key] == value
+    end
 
     cleanup_experiment(mlflogger)
 end
