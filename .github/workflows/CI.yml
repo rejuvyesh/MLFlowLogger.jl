@@ -23,12 +23,15 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - name: Setup python
+      - name: Setup python and mlflow server
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.arch }}
-      - run: python -m pip install setuptools mlflow  
+      - run: |
+          python -m pip install mlflow
+          python -m pip show mlflow
+          mlflow server --host localhost --port 5000 &
       - uses: actions/cache@v1
         env:
           cache-name: cache-artifacts
@@ -41,6 +44,8 @@ jobs:
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
+        env:
+          MLFLOW_URI: "http://localhost:5000"
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v1
         with:
