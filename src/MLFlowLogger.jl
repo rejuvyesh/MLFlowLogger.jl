@@ -94,7 +94,7 @@ Returns a tuple with the name of the fields of the structure `val` that
 should be logged to Comet.ml. This function should be overridden when
 you want Comet.ml to ignore some fields in a structure when logging
 it. The default behaviour is to return the  same result as `propertynames`.
-See also: [`Base.propertynames`](@ref)
+See also: [`Base.propertynames`](@extref)
 """
 logable_propertynames(val::Any) = propertynames(val)
 

@@ -1,8 +1,14 @@
 using MLFlowLogger
 using Documenter
+using DocumenterInterLinks
 
 DocMeta.setdocmeta!(MLFlowLogger, :DocTestSetup, :(using MLFlowLogger); recursive=true)
-
+links = InterLinks(
+    "Julia" => (
+        "https://docs.julialang.org/en/v1/",
+        joinpath(dirname(dirname(pathof(DocumenterInterLinks))), "docs/src/inventories/Julia.toml")        
+    ),
+)
 makedocs(;
     modules=[MLFlowLogger],
     authors="rejuvyesh <mail@rejuvyesh.com> and contributors",
@@ -16,6 +22,7 @@ makedocs(;
     pages=[
         "Home" => "index.md",
     ],
+    plugins=[links],
 )
 
 deploydocs(;

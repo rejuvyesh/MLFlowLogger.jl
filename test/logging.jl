@@ -1,6 +1,7 @@
 using Base.CoreLogging
 using FileIO
 using ImageIO
+using Compat
 
 @testset "Increment Step" begin
     mlflogger = MLFLogger(
